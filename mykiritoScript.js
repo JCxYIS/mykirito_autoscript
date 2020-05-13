@@ -23,33 +23,56 @@ document.body.appendChild(inject);
 
 // fuc
 var recursiveTimerId;
+var clickCombo = 0;
+var continuousClick = 0;
+var isLastActionClick = false;
 function StartRecursive(index)
 {
-    console.log("開始遞迴：按鈕"+i);
+    console.log("開始遞迴：按鈕"+index);
     Recursive(index);
 }
-
 function Recursive(index)
 {
-    var nextTime = 10000+Math.random()*19999; // Random: 10~30秒檢查一次  
+    // Random: 10~30秒檢查一次  
+    var nextTime = 10000+Math.random()*19999; 
     
 
     if(buttons[index].disabled)
     {
         // 仍在鎖，不能按
         console.log("窩不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
+
+        isLastActionClick = false;
+        continuousClick = 0;
     }
     else
     {
         // 按下去！
-        console.log("按下去！ "+buttons[index].innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
+        console.log(clickCombo+"combo!! 按下去！"+buttons[index].innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
         buttons[index].click();
+        
+        // statistic
+        clickCombo++;
+        if(isLastActionClick)
+        {
+            continuousClick++;
+        }
+        isLastActionClick = true;
     }
     
-    recursiveTimerId = setTimeout( ()=>{Recursive(index)} , nextTime);  
+    if(continuousClick < 5)
+    {
+        recursiveTimerId = setTimeout( ()=>{Recursive(index)} , nextTime);  
+    }
+    else
+    {
+        console.warn("無效點擊達5次，可能已遭擊殺。請重新執行遞迴！");
+    }
 }
 function EndRecursive()
 {
     window.clearTimeout(recursiveTimerId);
-    console.log("停止遞迴");
+    continuousClick = 0;
+    isLastActionClick = false;
+    console.log("停止遞迴、清除參數");
 }
