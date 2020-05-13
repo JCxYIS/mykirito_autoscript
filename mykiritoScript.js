@@ -40,15 +40,14 @@ function Recursive(index)
     if(buttons[index].disabled)
     {
         // 仍在鎖，不能按
-        console.log("窩不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
-
         isLastActionClick = false;
         continuousClick = 0;
+
+        console.log("窩不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
     }
     else
     {
         // 按下去！
-        console.log(clickCombo+"combo!! 按下去！"+buttons[index].innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
         buttons[index].click();
         
         // statistic
@@ -58,6 +57,8 @@ function Recursive(index)
             continuousClick++;
         }
         isLastActionClick = true;
+
+        console.log(clickCombo+"combo!! 按下去！"+buttons[index].innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
     }
     
     if(continuousClick < 5)
