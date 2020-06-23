@@ -1,28 +1,53 @@
 // ==UserScript==
 // @name         MyKiritoScript(TamperMonkey)
 // @namespace    https://jcjc.cf/
-// @version      0.1
-// @description  Hello world! Tampermonkey! My First TM script!!
+// @version      1.1
+// @description   My First TM script!!
 // @author       JCxYIS
 // @match        https://mykirito.com/
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function() 
+{
     'use strict';
 
-    let inject = document.createElement('div');
+    // 參數
+    const ACTION_NAME_LIST = ["狩獵兔肉", "自主訓練", "外出野餐", "汁妹", "做善事", "坐下休息", "釣魚"];
+    const BUTTON_AVAILABLE_CLASSNAME = "sc-AxgMl sc-fznZeY bbwYrD";
+    const CONTAINER_CLASSNAME = "sc-fzokOt hLgJkJ";
 
-    // 創建按鈕s
-    var buttons = document.getElementsByTagName('button');
-    console.log("按鈕數："+buttons.length);
-    for(let i = 0; i < buttons.length; i++)
+    // 製作選單
+    let inject = document.createElement('div');
+    inject.className = "sc-fzplWN hRBsWH";
+    let title = document.createElement("h3");
+    title.innerHTML = "自律行動";
+    inject.appendChild(title);
+
+    // 獲取可點的按鈕
+    var allbuttons = document.getElementsByTagName('button');
+    var actionButtons = [];
+    for(let i = 0; i < allbuttons.length; i++)
+    {
+        for(let j = 0; j < ACTION_NAME_LIST.length; j++)
+        {
+            if(allbuttons[i].innerText == ACTION_NAME_LIST[j])
+            {
+                actionButtons.push(allbuttons[i]);
+                continue;
+            }
+        }
+    }
+
+    // 創建按鈕
+    for(let i = 0; i < actionButtons.length; i++)
     {
         //console.log("按鈕名稱："+buttons[i].innerHTML);
 
         let newButt = document.createElement('button');
-        newButt.innerHTML = "重複按："+buttons[i].innerHTML;
-        newButt.onclick = ()=>{ StartRecursive(i); }
+        newButt.classList = BUTTON_AVAILABLE_CLASSNAME;
+        newButt.innerHTML = ""+actionButtons[i].innerHTML;
+        newButt.onclick = ()=>{ StartRecursive(actionButtons[i]); }
         inject.appendChild(newButt)
     }
 
@@ -31,7 +56,8 @@
     newButt.innerHTML = "停止遞迴";
     newButt.onclick = ()=>{ EndRecursive(); }
     inject.appendChild(newButt)
-    document.body.appendChild(inject);
+    document.getElementsByClassName(CONTAINER_CLASSNAME)[0].appendChild(inject);
+
 
 
     // fuc
@@ -39,31 +65,30 @@
     var clickCombo = 0;
     var continuousClick = 0;
     var isLastActionClick = false;
-    function StartRecursive(index)
+
+    function StartRecursive(butt)
     {
-        console.log("開始遞迴：按鈕"+index);
-        Recursive(index);
+        console.log("開始遞迴：按鈕"+butt.innerHTML);
+        Recursive(butt);
     }
-    function Recursive(index)
+    function Recursive(butt)
     {
-        // Random: 10~30秒檢查一次
-        let nextTime = 10000+Math.random()*19999;
+        // Random: 5~20秒檢查一次
+        let nextTime = 5000+Math.random()*15000;
 
 
-        if(buttons[index].disabled)
+        if(butt.disabled)
         {
             // 仍在鎖，不能按
             isLastActionClick = false;
             continuousClick = 0;
 
-            console.log("窩不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
+            console.log("按鈕不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
         }
         else
         {
             // 按下去！
-            buttons[index].click();
-
-            // statistic
+            butt.click();
             clickCombo++;
             if(isLastActionClick)
             {
@@ -71,16 +96,16 @@
             }
             isLastActionClick = true;
 
-            console.log(clickCombo+"combo!! 按下去！"+buttons[index].innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
+            console.log(clickCombo+" combo!! "+butt.innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
         }
 
         if(continuousClick < 5)
         {
-            recursiveTimerId = setTimeout( ()=>{Recursive(index)} , nextTime);
+            recursiveTimerId = setTimeout( ()=>{Recursive(butt)} , nextTime);
         }
         else
         {
-            console.warn("無效點擊達5次，可能已遭擊殺。請重新執行遞迴！");
+            console.warn("無效點擊達 5 次。請重新執行遞迴！");
         }
     }
     function EndRecursive()
@@ -88,6 +113,7 @@
         window.clearTimeout(recursiveTimerId);
         continuousClick = 0;
         isLastActionClick = false;
-        console.log("停止遞迴、清除參數");
+        console.log("停止遞迴；清除參數");
     }
-})();
+}
+)();
