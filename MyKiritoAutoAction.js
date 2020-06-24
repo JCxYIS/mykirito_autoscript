@@ -89,8 +89,8 @@
     }
     function Recursive(butt)
     {
-        // Random: 5~20秒檢查一次
-        let nextTime = 5000+Math.random()*15000;
+        // Random: 10~20秒檢查一次
+        let nextTime = 10000+Math.random()*10000;
 
 
         if(butt.disabled || butt.classList == BUTTON_DISABLED_CLASSNAME)
