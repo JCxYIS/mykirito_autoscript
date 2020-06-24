@@ -128,7 +128,7 @@
             EndRecursive();
         }
 
-        subtitle2.innerHTML = "自律行動執行中，已點擊了 "+clickCombo+" 次！";
+        subtitle2.innerHTML = "自律行動執行中，點擊【"+butt.innerHTML+"】，已點擊了 "+clickCombo+" 次！";
         if(continuousClick > 0)
             subtitle2.innerHTML += "<br><span style='color:yellow'>連續點擊次數( 5 次將會暫停腳本)："+continuousClick+" / 5";
     }
