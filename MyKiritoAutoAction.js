@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      1.3
+// @version      1.4
 // @description  我的第一支油猴腳本，所以很破對不起。
 // @author       JCxYIS
 // @match        https://mykirito.com/*
@@ -39,6 +39,7 @@
     // 獲取可點的按鈕
     let allbuttons = document.getElementsByTagName('button');
     var actionButtons = [];
+    var myFunctionButtons = [];
     for(let i = 0; i < allbuttons.length; i++)
     {
         for(let j = 0; j < ACTION_NAME_LIST.length; j++)
@@ -60,7 +61,8 @@
         newButt.classList = BUTTON_AVAILABLE_CLASSNAME;
         newButt.innerHTML = ""+actionButtons[i].innerHTML;
         newButt.onclick = ()=>{ StartRecursive(actionButtons[i]); }
-        inject.appendChild(newButt)
+        inject.appendChild(newButt);
+        myFunctionButtons.push(newButt);
     }
     let newButt = document.createElement('button');
     newButt.innerHTML = "停止";
@@ -79,12 +81,12 @@
 
     function StartRecursive(butt)
     {
-        console.log("開始遞迴：按鈕"+butt.innerHTML);
-        for(var i = 0; i < actionButtons.length; i++)
-        {
-            actionButtons[i].disabled = true;
-        }
+        console.log("開始遞迴：按鈕"+butt.innerHTML);        
         EndRecursive();
+        for(var i = 0; i < myFunctionButtons.length; i++)
+        {
+            myFunctionButtons[i].classList = BUTTON_DISABLED_CLASSNAME;
+        }
         Recursive(butt);
     }
     function Recursive(butt)
@@ -135,9 +137,9 @@
         window.clearTimeout(recursiveTimerId);
         continuousClick = 0;
         isLastActionClick = false;
-        for(var i = 0; i < actionButtons.length; i++)
+        for(var i = 0; i < myFunctionButtons.length; i++)
         {
-            actionButtons[i].disabled = false;
+            myFunctionButtons[i].classList = BUTTON_AVAILABLE_CLASSNAME;
         }
         subtitle2.innerHTML = "";
         console.log("停止遞迴；清除參數。");
