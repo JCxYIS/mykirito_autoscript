@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
-// @namespace    https://jcjc.cf/
+// @namespace    https://github.com/JCxYIS/mykirito_autoscript
 // @version      1.3
 // @description  我的第一支油猴腳本，所以很破對不起。
 // @author       JCxYIS
