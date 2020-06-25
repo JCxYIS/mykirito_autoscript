@@ -1,16 +1,19 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      1.4
+// @version      1.5
 // @description  我的第一支油猴腳本，所以很破對不起。
 // @author       JCxYIS
 // @match        https://mykirito.com/*
 // @grant        none
 // ==/UserScript==
 
-(function() 
+(function()
 {
     'use strict';
+
+    setTimeout(()=>{main()}, 1000);
+
 
     // 參數
     const ACTION_NAME_LIST = ["狩獵兔肉", "自主訓練", "外出野餐", "汁妹", "做善事", "坐下休息", "釣魚"];
@@ -18,58 +21,69 @@
     const BUTTON_DISABLED_CLASSNAME = "sc-AxgMl kPlkaT";
     const H3_CLASSNAME = "sc-fznyAO CWQMf";
     const CONTAINER_CLASSNAME = "sc-fzokOt hLgJkJ";
-    
     const INJECTION_CLASSNAME = "sc-fzplWN hRBsWH"
 
-    // 製作選單
-    let inject = document.createElement('div');
-    let title = document.createElement("h3");
-    let subtitle1 = document.createElement('p');
-    let subtitle2 = document.createElement('p');
-    document.getElementsByClassName(CONTAINER_CLASSNAME)[0].insertBefore(inject, 
-        document.getElementsByClassName(CONTAINER_CLASSNAME)[0].childNodes[2])//.appendChild(inject);
-    inject.appendChild(title);
-    inject.appendChild(subtitle1);
-    inject.appendChild(subtitle2);
-    inject.classList = INJECTION_CLASSNAME;
-    title.classList = H3_CLASSNAME;
-    title.innerHTML = "自律行動";
-    subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責</span>";
-
-    // 獲取可點的按鈕
-    let allbuttons = document.getElementsByTagName('button');
-    var actionButtons = [];
+    var inject;
+    var title;
+    var subtitle1;
+    var subtitle2;
     var myFunctionButtons = [];
-    for(let i = 0; i < allbuttons.length; i++)
-    {
-        for(let j = 0; j < ACTION_NAME_LIST.length; j++)
+
+
+
+    function main()
+    {       
+        // 製作選單
+        inject = document.createElement('div');
+        title = document.createElement("h3");
+        subtitle1 = document.createElement('p');
+        subtitle2 = document.createElement('p');
+
+        document.getElementsByClassName(CONTAINER_CLASSNAME)[0].insertBefore(inject,
+            document.getElementsByClassName(CONTAINER_CLASSNAME)[0].childNodes[2])//.appendChild(inject);
+        inject.appendChild(title);
+        inject.appendChild(subtitle1);
+        inject.appendChild(subtitle2);
+
+        inject.classList = INJECTION_CLASSNAME;
+        title.classList = H3_CLASSNAME;
+        title.innerHTML = "自律行動";
+        subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責</span>";
+
+        // 獲取可點的按鈕
+        let allbuttons = document.getElementsByTagName('button');
+        var actionButtons = [];
+        myFunctionButtons = [];
+        for(let i = 0; i < allbuttons.length; i++)
         {
-            if(allbuttons[i].innerText == ACTION_NAME_LIST[j])
+            for(let j = 0; j < ACTION_NAME_LIST.length; j++)
             {
-                actionButtons.push(allbuttons[i]);
-                continue;
+                if(allbuttons[i].innerText == ACTION_NAME_LIST[j])
+                {
+                    actionButtons.push(allbuttons[i]);
+                    continue;
+                }
             }
         }
-    }
 
-    // 創建按鈕
-    for(let i = 0; i < actionButtons.length; i++)
-    {
-        //console.log("按鈕名稱："+buttons[i].innerHTML);
+        // 創建按鈕
+        for(let i = 0; i < actionButtons.length; i++)
+        {
+            //console.log("按鈕名稱："+buttons[i].innerHTML);
 
+            let newButt = document.createElement('button');
+            newButt.classList = BUTTON_AVAILABLE_CLASSNAME;
+            newButt.innerHTML = ""+actionButtons[i].innerHTML;
+            newButt.onclick = ()=>{ StartRecursive(actionButtons[i]); }
+            inject.appendChild(newButt);
+            myFunctionButtons.push(newButt);
+        }
         let newButt = document.createElement('button');
+        newButt.innerHTML = "停止";
         newButt.classList = BUTTON_AVAILABLE_CLASSNAME;
-        newButt.innerHTML = ""+actionButtons[i].innerHTML;
-        newButt.onclick = ()=>{ StartRecursive(actionButtons[i]); }
+        newButt.onclick = ()=>{ EndRecursive(); }
         inject.appendChild(newButt);
-        myFunctionButtons.push(newButt);
     }
-    let newButt = document.createElement('button');
-    newButt.innerHTML = "停止";
-    newButt.classList = BUTTON_AVAILABLE_CLASSNAME;
-    newButt.onclick = ()=>{ EndRecursive(); }
-    inject.appendChild(newButt);
-    
 
 
 
@@ -81,7 +95,7 @@
 
     function StartRecursive(butt)
     {
-        console.log("開始遞迴：按鈕"+butt.innerHTML);        
+        console.log("開始遞迴：按鈕"+butt.innerHTML);
         EndRecursive();
         for(var i = 0; i < myFunctionButtons.length; i++)
         {
@@ -116,7 +130,7 @@
 
             console.log(clickCombo+" combo!! "+butt.innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
             console.log(butt);
-        }        
+        }
 
         if(continuousClick < 5)
         {
