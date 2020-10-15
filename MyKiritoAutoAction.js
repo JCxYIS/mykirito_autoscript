@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      2.0
-// @description  我的第一支油猴腳本，所以很破對不起。總之：自律行動，當心被抓。
+// @version      2.1
+// @description  自動點擊行動與PVP；使用腳本有風險，小心被茅場大大抓
 // @author       JCxYIS
 // @match        https://mykirito.com/*
 // @grant        none
@@ -26,11 +26,9 @@
 
 
     // 變數
-    var inject;
-    var title;
-    var subtitle1;
-    var subtitle2; // -
-    var myFunctionButtons = []; // - 實際上只會動最後兩個 lol
+    var subtitle2; // 副標
+    var myFunctionButtons = []; // 按鈕s
+    var loopInput; // 連續點擊數 (-1 表示無限連擊)
 
     // 進入點 小夫
     setInterval ( function ()
@@ -90,20 +88,32 @@
         }
 
         // 製作選單
+        var inject;
+        var title, subtitle1, loopInputInfo;
         inject = document.createElement('div');
         title = document.createElement("h3");
         subtitle1 = document.createElement('p');
         subtitle2 = document.createElement('p');
+        loopInputInfo = document.createElement('span');
+        loopInput = document.createElement('input');
+
+        inject.classList = INJECTION_CLASSNAME;
+        inject.style.backgroundColor = "#f9555511"
+        title.classList = H3_CLASSNAME;
+        title.innerHTML = "自律行動";
+        subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責。</span>";
+        subtitle2.innerHTML = "";
+        loopInputInfo.innerHTML = "連續點擊數 (-1 表示無限連擊)：";
+        loopInput.classList = "sc-AxheI fniENO";
+        loopInput.min = 1; loopInput.value = -1;
 
         usingInjectionPos.insertBefore(inject, usingInjectionPos.childNodes[usingInjectionOrder])//.appendChild(inject);
         inject.appendChild(title);
         inject.appendChild(subtitle1);
+        inject.appendChild(loopInputInfo);
+        inject.appendChild(loopInput);
         inject.appendChild(subtitle2);
-
-        inject.classList = INJECTION_CLASSNAME;
-        title.classList = H3_CLASSNAME;
-        title.innerHTML = "自律行動";
-        subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責。</span>";
+        //inject.appendChild(document.createElement('br'));
 
         // 創建剛綁好的按鈕
         for(let i = 0; i < actionButtons.length; i++)
@@ -137,15 +147,17 @@
 
     function StartRecursive(butt)
     {
-        console.log("開始遞迴！按鈕 "+butt.innerHTML);
         EndRecursive();
         for(var i = 0; i < myFunctionButtons.length; i++)
         {
             myFunctionButtons[i].classList = BUTTON_DISABLED_CLASSNAME;
         }
-        Recursive(butt);
+
+        let recurCount = loopInput.value
+        Recursive(butt, recurCount);
+        console.log("開始遞迴！按鈕 "+butt.innerHTML+" "+recurCount+"次");
     }
-    function Recursive(butt)
+    function Recursive(butt, maxCombo)
     {
         // Random: 15~30秒檢查一次
         let nextTime = 15000+Math.random()*15000;
@@ -157,7 +169,7 @@
             isLastActionClick = false;
             continuousInvalidClick = 0;
 
-            console.log("按鈕不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
+            //console.log("按鈕不能按！ 下次檢查時間(n秒後)："+nextTime/1000);
         }
         else
         {
@@ -171,21 +183,29 @@
             }
             isLastActionClick = true;
 
-            console.log(clickCombo+"("+clickComboTotal+") combo!! "+butt.innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
-            console.log(butt);
+            //console.log(clickCombo+"("+clickComboTotal+") combo!! "+butt.innerHTML + "\n下次檢查時間(n秒後)："+nextTime/1000);
+            //console.log(butt);
         }
 
-        if(continuousInvalidClick < 5)
+        if(continuousInvalidClick >= 5)
         {
-            recursiveTimerId = setTimeout( ()=>{Recursive(butt)} , nextTime);
+            EndRecursive();
+            subtitle2.innerHTML = "<span style='color:yellow'>無效點擊達 5 次。請重新執行！</span>";
+            return;
+        }
+        else if( clickCombo >= maxCombo && maxCombo != -1)
+        {
+            EndRecursive();
+            subtitle2.innerHTML = "<span style='color:green'>自律行動執行完成！</span>";
+            return;
         }
         else
         {
-            console.warn("無效點擊達 5 次。請重新執行！");
-            EndRecursive();
+            recursiveTimerId = setTimeout( ()=>{Recursive(butt, maxCombo)} , nextTime);
+            subtitle2.innerHTML = "<span style='color:cyan'>自律行動執行中！</span>";
         }
 
-        subtitle2.innerHTML = "自律行動執行中，點擊【"+butt.innerHTML+"】，已點擊了 "+clickCombo+" ("+clickComboTotal+") 次！";
+        subtitle2.innerHTML += "點擊【"+butt.innerHTML+"】，已點擊了 "+clickCombo+" ("+clickComboTotal+") 次！";
         if(continuousInvalidClick > 0)
             subtitle2.innerHTML += "<br><span style='color:yellow'>連續點擊次數( 5 次將會暫停腳本)："+continuousInvalidClick+" / 5";
     }
