@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      2.1
+// @version      2.2
 // @description  自動點擊行動與PVP；使用腳本有風險，小心被茅場大大抓
 // @author       JCxYIS
 // @match        https://mykirito.com/*
@@ -100,9 +100,9 @@
         inject.classList = INJECTION_CLASSNAME;
         inject.style.backgroundColor = "#f9555511"
         title.classList = H3_CLASSNAME;
-        title.innerHTML = "自律行動";
+        title.innerHTML = "你喜歡催眠嗎";
         subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責。</span>";
-        subtitle2.innerHTML = "";
+        subtitle2.innerHTML = "<span style='color:cyan'>冷靜，各位。先不要。</span>";
         loopInputInfo.innerHTML = "連續點擊數 (-1 表示無限連擊)：";
         loopInput.classList = "sc-AxheI fniENO";
         loopInput.min = 1; loopInput.value = -1;
