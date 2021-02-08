@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      2.2
+// @version      2.3
 // @description  自動點擊行動與PVP；使用腳本有風險，小心被茅場大大抓
 // @author       JCxYIS
 // @match        https://mykirito.com/*
@@ -100,9 +100,9 @@
         inject.classList = INJECTION_CLASSNAME;
         inject.style.backgroundColor = "#f9555511"
         title.classList = H3_CLASSNAME;
-        title.innerHTML = "你喜歡催眠嗎";
-        subtitle1.innerHTML = "自動點按行動按鍵，當按鈕能被按下時就會按下。<span style='color:yellow'>注意：這就是團長說的腳本了，出事請自行負責。</span>";
-        subtitle2.innerHTML = "<span style='color:cyan'>冷靜，各位。先不要。</span>";
+        title.innerHTML = "誰還在玩這破遊";
+        subtitle1.innerHTML = "大家都應該去玩 <a href='https://ourfloatingcastle.com' style='color:yellow'>我們的浮游城</a>！！";
+        subtitle2.innerHTML = "<span style='color:cyan'>萬人國戰，全民皆兵。</span>";
         loopInputInfo.innerHTML = "連續點擊數 (-1 表示無限連擊)：";
         loopInput.classList = "sc-AxheI fniENO";
         loopInput.min = 1; loopInput.value = -1;
@@ -156,6 +156,7 @@
         let recurCount = loopInput.value
         Recursive(butt, recurCount);
         console.log("開始遞迴！按鈕 "+butt.innerHTML+" "+recurCount+"次");
+        alert("記得去支持 團長最新力作【我們的浮游城】！")
     }
     function Recursive(butt, maxCombo)
     {
