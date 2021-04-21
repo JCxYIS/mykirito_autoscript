@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      2.3
+// @version      2.4
 // @description  自動點擊行動與PVP；使用腳本有風險，小心被茅場大大抓
 // @author       JCxYIS
 // @match        https://mykirito.com/*
@@ -17,6 +17,7 @@
     // 參數
     const ACTION_NAME_LIST = ["狩獵兔肉", "自主訓練", "外出野餐", "汁妹", "做善事", "坐下休息", "釣魚"];
     const BATTLE_NAME_LIST = ["友好切磋", "認真對決", "決一死戰", "我要超渡你"];
+    const BOSS_NAME_LIST = ["挑戰"];
     const BUTTON_AVAILABLE_CLASSNAME = "sc-AxgMl llLWDd";
     const BUTTON_DISABLED_CLASSNAME = "sc-AxgMl kPlkaT";
     const H3_CLASSNAME = "sc-fznyAO CWQMf";
@@ -65,6 +66,12 @@
             usingInjectionPos = document.getElementsByClassName(BATTLE_CONTAINER_CLASSNAME)[0].parentNode;
             usingInjectionOrder = 2;
         }
+        else if (location.pathname.startsWith("/boss"))
+        {
+            usingActionList = BOSS_NAME_LIST;
+            usingInjectionPos = document.getElementsByClassName(BATTLE_CONTAINER_CLASSNAME)[0].parentNode;
+            usingInjectionOrder = 1;
+        }
         else
         {
             // 不是可以自動的地方就滾
@@ -79,7 +86,7 @@
         {
             for(let j = 0; j < usingActionList.length; j++)
             {
-                if(allbuttons[i].innerText == usingActionList[j] && allbuttons[i].offsetParent === null) /*.parentElement.style.display != "none"*/
+                if(allbuttons[i].innerText == usingActionList[j] && allbuttons[i].offsetParent !== null) /*.parentElement.style.display != "none"*/
                 {
                     actionButtons.push(allbuttons[i]);
                     continue;
@@ -156,7 +163,7 @@
         let recurCount = loopInput.value
         Recursive(butt, recurCount);
         console.log("開始遞迴！按鈕 "+butt.innerHTML+" "+recurCount+"次");
-        alert("記得去支持 團長最新力作【我們的浮游城】！")
+        //alert("記得去支持 團長最新力作【我們的浮游城】！")
     }
     function Recursive(butt, maxCombo)
     {
