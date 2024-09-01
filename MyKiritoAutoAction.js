@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MyKirito Auto Action
 // @namespace    https://github.com/JCxYIS/mykirito_autoscript
-// @version      3.0
+// @version      3.1
 // @description  自動點擊行動與PVP；使用腳本有風險，小心被茅場大大抓
 // @author       JCxYIS
 // @match        https://mykirito.com/*
@@ -92,8 +92,7 @@
 
         if(location.pathname == "/") // 跟目錄
         {
-            usingActionList = ACTION_NAME_LIST;
-            usingActionList.push(AWARD_NAME_LIST);
+            usingActionList = ACTION_NAME_LIST.concat(AWARD_NAME_LIST);
             usingInjectionPos = document.getElementsByClassName(BATTLE_CONTAINER_CLASSNAME)[0].parentNode;
             usingInjectionOrder = 4;
         }
@@ -122,6 +121,7 @@
         /** 所有被我們標示可遞迴的按鈕 */
         let actionButtons = [];
         floorAwardButt = undefined;
+        console.log(usingActionList);
         for(let i = 0; i < allbuttons.length; i++)
         {
             if(allbuttons[i].offsetParent !== null) /*.parentElement.style.display != "none"*/
